@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8"/>
+	<style>
+
+	</style>
+	<title>IT 2320 - Lab 2</title>
+	<pre>
+	<script>
+		"use strict";
+		
+		// set up an array and initialize the first two values
+		var fibArray = [];
+		fibArray[0] = 0;
+		fibArray[1] = 1;
+		
+		// declare a variable for the size of the squence 
+		var fibNum;
+		
+		// prompt user for how many 
+		do{
+			fibNum = prompt("How many numbers in sequence?",10);
+			fibNum = parseInt(fibNum);
+			// check that fibNum >= 3
+			if(fibNum >= 3){
+				;
+			}else{
+				fibNum = NaN;
+				alert("ERROR: The number must be greater than or equal to 3. Please try again.");
+			}
+		}while (isNaN(fibNum));
+		
+		// write the values into the array
+		// You start at 2 because the first two values are already there
+		var i;
+		for (i=2; i<fibNum; i++) {
+			fibArray[i] = fibArray[i-1] + fibArray[i-2];
+		}
+		
+		// read from the array and print balues to screen
+		// another for loop 
+		document.writeln("Fibonacci Sequence");
+
+		for (i=0; i<fibNum; i++) {
+			document.writeln("["+i+"]: "+fibArray[i]);
+		}
+		
+		// calculate golden ratio and display it
+		//  last number / 2nd last number
+		i = fibArray.length;
+		var myRatio = fibArray[i-1] / fibArray[i-2];
+
+		document.writeln("\nRatio:        " + myRatio);
+		document.writeln("Golden Ratio: 1.618033988749895")
+
+	</script>
+	</pre>
+</head>
+<body>
+	<h2>Kevin Karosy - IT 2320 - Lab 2</h2>
+
+</body>
+
+</html>
