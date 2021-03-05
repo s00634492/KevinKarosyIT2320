@@ -1,0 +1,81 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Lab 5 - Slide Show</title>
+<script>
+	"use strict";
+
+	var swapTimer;
+	var countdownTimer;
+
+	var images=[];
+	var currentImage=0;
+
+	function $(id){
+		return document.getElementById(id);
+	}
+	window.onload=function(){
+		$("timerVal").onchange=changeTheTimer;
+
+		$("timerVal").value=5;
+		loadImages();
+		changeTheTimer();// start the timer now.
+	}
+	function loadImages(){
+		var imageNames=["images/adams.jpg",
+						"images/jackson.jpg",
+						"images/jefferson.jpg",
+						"images/madison.jpg",
+						"images/washington.jpg"];
+		for(var i=0;i<imageNames.length;i++){
+			images[i]=new Image();
+			images[i].src=imageNames[i];
+		}
+	}
+	function changeTheTimer(){
+		// collect the new number.
+		var newInterval=parseInt($("timerVal").value);
+		if(isNaN(newInterval) || newInterval<=0){
+			alert("Timer must be a positive integer.");
+			return;
+		}else{
+			// if user entered a float, show them it was changed to an int.
+			$("timerVal").value=newInterval;
+		}
+
+		// use this to track the countdown timing.
+		var countdownProgress=newInterval;
+
+		// reset the timers.
+		clearInterval(swapTimer);
+		swapTimer=setInterval(swapImage,newInterval*1000);
+		
+		clearInterval(countdownTimer);
+		countdownTimer=setInterval(writeCountdown,1000);
+		
+		//update the countdown now.
+		writeCountdown();
+
+		function swapImage(){
+			currentImage = (currentImage + 1) % images.length;
+			$("slideShowImg").src=images[currentImage].src;
+			countdownProgress=newInterval;
+		}
+		function writeCountdown(){
+			countdownProgress--;
+			$("timerCount").innerHTML=countdownProgress+1;
+		}
+	}
+</script>
+</head>
+<body>
+	<h2>Kevin Karosy - IT 2320 - Lab 5</h2>
+	<p><center>
+	   Timer (seconds): <input type="text" id="timerVal">
+	   <br/><br/>
+	   <img id="slideShowImg" src="images/adams.jpg">
+	   <br/><br/>
+	   <h2 id="timerCount">-</h2>
+	</center></p>
+</body>
+</html>
