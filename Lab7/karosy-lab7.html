@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Lab 7 - Walking Guy</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<style>
+		.flipx{
+			-webkit-transform: scaleX(-1);
+			transform: scaleX(-1);
+		}
+	</style>
+	<script>
+		"use strict";
+
+		$(document).ready(function(){
+			$("#startButton").click(startClick);
+			$("#guy").hide();
+		});
+
+		function startClick(){
+			// reset the guy's animation
+			$("#guy").stop(true,false);
+			$("#guy").removeClass("flipx");
+			$("#guy").hide();
+
+			var walkDistance=$(window).width()-400;
+
+			$("#guy").fadeIn(1000)
+				.animate({left:walkDistance},3000,"linear")
+				.animate({left:walkDistance},500,
+					function(){$(this).addClass("flipx");})
+				.animate({left:0},3000,"linear")
+				.fadeOut(1000);
+		}
+	</script>
+</head>
+<body style="background-color:lightgrey; margin:0; padding:0;">
+	
+	<center>
+		<br/>
+		<h2>Kevin Karosy - IT 2320 - Lab 7 Walking Guy</h2>
+		<input id="startButton" type="button" value="START">
+		<br/>
+	</center>
+	
+	<img id="guy" src="lab9-guy-walking.gif" style="position:relative;">
+
+</body>
+</html>
