@@ -1,0 +1,78 @@
+<html>
+<head>
+	<title>Lab 9 - Weather API</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script>
+		"use strict";
+
+		var cardinalDirections=["N","NE","E","SE","S","SW","W","NW","N"];
+		
+		$(document).ready(function(){
+			$("#searchButton").focus();
+			$("#weatherTable").hide();
+
+			$("#searchButton").click(function(){
+
+				var zip=$("#zip").val().trim();
+				if(zip.length!=5){
+					alert("Please enter a five-digit ZIP code.");
+					return;
+				}
+
+				var appid="761b5ba7ebf7abc88af72b86d78dd160";
+
+				var url = "http://api.openweathermap.org/data/2.5/weather";
+				url += "?zip="+zip+",us&appid="+appid+"&units=imperial";
+
+				$.ajax({
+					type:"get",
+					url:url,
+					dataType:"json",
+					beforeSend:function(){
+						$("#messageArea").html("Loading...");
+						$("#weatherTable").hide();
+					},
+					error:function(xhr,status,error){
+						$("#messageArea").html("(no content)");
+						alert("Error: "+xhr.status+" - "+error);
+					}
+				}).done(function(weatherResponse){
+					$("#messageArea").html("");
+					$("#weatherTable").show();
+
+					var windDirection = weatherResponse.wind.deg.toFixed(0);
+					var windCardinal = cardinalDirections[Math.round(windDirection/45)];
+
+					$("#nameOfCity").html(weatherResponse.name);
+					$("#currentCondition").html(weatherResponse.weather[0].main);
+					$("#temperature").html(weatherResponse.main.temp.toFixed(0)+" &deg;F");
+					$("#windSpeed").html(weatherResponse.wind.speed.toFixed(0)+" mph");
+					$("#windDirection").html(windDirection+" &deg; ("+windCardinal+")");
+					$("#humidity").html(weatherResponse.main.humidity.toFixed(0)+" &percnt;");
+					$("#tempMinimum").html(weatherResponse.main.temp_min.toFixed(0)+" &deg;F");
+					$("#tempMaximum").html(weatherResponse.main.temp_max.toFixed(0)+" &deg;F");
+				});
+			});// end searchButton click
+		});// end document
+	</script>
+</head>
+<body>
+	<h2>Kevin Karosy - IT 2320 - Lab 9</h2>
+
+	<input id="zip" type="text" maxlength="5" placeholder="Five-digit ZIP code">
+	<button id="searchButton">Search</button>
+	<br/>
+	<span id="messageArea"></span>
+	<br/>
+	<table id="weatherTable">
+		<tr><td>Name of city:</td><td id="nameOfCity"></td></tr>
+		<tr><td>Current condition:</td><td id="currentCondition"></td></tr>
+		<tr><td>Temperature:</td><td id="temperature"></td></tr>
+		<tr><td>Wind speed:</td><td id="windSpeed"></td></tr>
+		<tr><td>Wind direction:</td><td id="windDirection"></td></tr>
+		<tr><td>Humidity:</td><td id="humidity"></td></tr>
+		<tr><td>Temp minimum:</td><td id="tempMinimum"></td></tr>
+		<tr><td>Temp maximum:</td><td id="tempMaximum"></td></tr>
+	</table>
+</body>
+</html>
