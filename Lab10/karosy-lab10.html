@@ -58,19 +58,13 @@
 			var prevOccur = -1;
 			var newPos = 0;
 
-			var upperOccur;
-			var lowerOccur;
-
 			if(text=="" || term=="")return occurs;
 
+			text = text.toUpperCase();
+			term = term.toUpperCase();
 			while(true){
-				//look for next occur, choose the earliest of the two.
-				upperOccur = text.indexOf(term.toUpperCase(),prevOccur+1);
-				lowerOccur = text.indexOf(term.toLowerCase(),prevOccur+1);
-				if(upperOccur==-1 || lowerOccur==-1)
-					newPos=Math.max(upperOccur,lowerOccur);
-				else newPos=Math.min(upperOccur,lowerOccur);
-				
+				//look for next occur.
+				newPos = text.indexOf(term,prevOccur+term.length);
 				if(newPos==-1)break;
 				occurs[occurs.length]=newPos;
 				// next loop starts from newPos.
@@ -87,7 +81,7 @@
 			// remove occurs in reverse order
 			for(var i=occurs.length-1; i>=0; i--){
 				firstPart = result.substring(0,occurs[i]);
-				secondPart = result.substring(occurs[i]+1);
+				secondPart = result.substring(occurs[i]+term.length);
 				result = firstPart + secondPart;
 			}
 			return result;
