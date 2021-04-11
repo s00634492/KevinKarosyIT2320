@@ -1,0 +1,186 @@
+<html>
+<head>
+	<script>
+		// script tags might get changed by Blackboard  - FIX THESE
+	</script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script>
+		"use strict";
+
+		$(document).ready(function(){
+			$("#submit").click(function(){
+				var textArea = $("#textArea").val().trim();
+				var searchChar = $("#searchChar").val();
+				var numDays = parseInt($("#numDays").val());
+
+				if(isNaN(numDays)){
+					alert("Date Modifier must be an integer.");
+					return;
+				}else $("#numDays").val(numDays);
+
+				$("#textAreaWordCount").text(WordCount(textArea));
+				$("#textAreaOccurCount").text(GetOccursArray(searchChar,textArea).length);
+				$("#textAreaCaps").text(textArea.toUpperCase());
+				$("#textAreaWithoutOccurs").text(WithoutOccurs(searchChar,textArea));
+				$("#currentDateModified").text(GetDateModified(numDays));
+			});
+			$("#reset").click(function(){
+				$("#textArea").val("");
+				$("#searchChar").val("");
+				$("#numDays").val("");
+
+				$("#textAreaWordCount").text("****");
+				$("#textAreaOccurCount").text("****");
+				$("#textAreaCaps").text("****");
+				$("#textAreaWithoutOccurs").text("****");
+				$("#currentDateModified").text("****");
+			});
+		});
+
+		function WordCount(text){
+			var occurs = GetOccursArray(" ",text);
+			var result=1;
+
+			if(text=="")return 0;
+			if(occurs.length==0)return 1;
+			if(occurs.length==1)return 2;
+
+			for(var i=0; i<occurs.length; i++){
+				// spaces directly after are ignored.
+				if(occurs[i]-occurs[i-1]<=1);
+				else result++;
+			}
+			return result;
+		}
+		function GetOccursArray(term,text){
+			// this function returns an array of occurences.
+			var occurs = new Array(0);
+			var prevOccur = -1;
+			var newPos = 0;
+
+			var upperOccur;
+			var lowerOccur;
+
+			if(text=="" || term=="")return occurs;
+
+			while(true){
+				//look for next occur, choose the earliest of the two.
+				upperOccur = text.indexOf(term.toUpperCase(),prevOccur+1);
+				lowerOccur = text.indexOf(term.toLowerCase(),prevOccur+1);
+				if(upperOccur==-1 || lowerOccur==-1)
+					newPos=Math.max(upperOccur,lowerOccur);
+				else newPos=Math.min(upperOccur,lowerOccur);
+				
+				if(newPos==-1)break;
+				occurs[occurs.length]=newPos;
+				// next loop starts from newPos.
+				prevOccur=newPos;
+			}
+			return occurs;
+		}
+		function WithoutOccurs(term,text){
+			var occurs = GetOccursArray(term,text);
+			var result=text;
+			var firstPart;
+			var secondPart;
+
+			// remove occurs in reverse order
+			for(var i=occurs.length-1; i>=0; i--){
+				firstPart = result.substring(0,occurs[i]);
+				secondPart = result.substring(occurs[i]+1);
+				result = firstPart + secondPart;
+			}
+			return result;
+		}
+		function GetDateModified(numDays){
+			var myDate = new Date();
+			myDate.setDate(myDate.getDate() + numDays);
+
+			var mmm = myDate.getMonth()+1;
+			if(mmm<10)mmm="0"+mmm;
+			var ddd = myDate.getDate();
+			if(ddd<10)ddd="0"+ddd;
+			var yyy = myDate.getFullYear();
+
+			return mmm+"/"+ddd+"/"+yyy;
+		}
+	</script>
+<style>
+  table { border-collapse: separate;
+          border-spacing: 15px;      }
+</style>
+</head>
+<body>
+<h2>Kevin Karosy - IT 2320 - Lab 10</h2>
+<h3>Working with Strings and Dates</h3>
+<form>
+<table>
+	<tr>
+		<td>Select the <strong>Search Character</strong>:</td><td><select id="searchChar">
+		                               <option value=""></option>
+								       <option value="A">A</option>
+								       <option value="B">B</option>
+                                       <option value="C">C</option>
+                                       <option value="D">D</option>
+                                       <option value="E">E</option>
+                                       <option value="F">F</option>	                                   
+									   <option value="G">G</option>
+                                       <option value="H">H</option>
+                                       <option value="I">I</option>
+                                       <option value="J">J</option>
+                                       <option value="K">K</option>
+                                       <option value="L">L</option>
+                                       <option value="M">M</option>
+                                       <option value="N">N</option>
+                                       <option value="O">O</option>
+                                       <option value="P">P</option>
+                                       <option value="Q">Q</option>
+                                       <option value="R">R</option>
+                                       <option value="S">S</option>
+                                       <option value="T">T</option>
+                                       <option value="U">U</option>
+                                       <option value="V">V</option>
+                                       <option value="W">W</option>
+                                       <option value="X">X</option>
+                                       <option value="Y">Y</option>
+                                       <option value="Z">Z</option>
+								   </select>
+								</td>
+	</tr>
+	<tr>
+	    <td>Type or paste in some text:</td>
+		<td><textarea id="textArea" cols="40" rows="15"></textarea></td>
+	</tr>
+	<tr>
+	    <td>Date Modifier - Number of Days:</td><td><input type="number" id="numDays" ></td>
+	</tr>
+    <tr>
+	    <td>Number of words entered:</td>
+	    <td id="textAreaWordCount"> **** </td>
+	</tr>
+	<tr>
+	    <td>Number of occurances of the search character:</td>
+	    <td id="textAreaOccurCount"> **** </td>
+	</tr>
+    <tr>
+	    <td>Display the entered text in <strong>ALL CAPS</strong>:</td>
+	    <td id="textAreaCaps"> **** </td>
+	</tr>
+    <tr>
+	    <td>Display the entered text with the search character <strong>removed</strong>:</td>
+	    <td id="textAreaWithoutOccurs"> **** </td>
+	</tr>
+    <tr>
+	    <td>Add the number of days in Date Modifier to the current date<br/>Display the resulting date as MM/DD/YYYY:</td>
+	    <td id="currentDateModified"> **** </td>
+	</tr>
+	<tr>
+		<td><input type="button" id="reset" name="reset" value="Reset"></td>
+        <td><input type="button" id="submit" name="submit" value="Submit"></td>
+	</tr>
+
+</table>
+</form>
+</body>
+
+</html>
