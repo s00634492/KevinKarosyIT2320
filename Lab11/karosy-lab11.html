@@ -1,0 +1,89 @@
+<html>
+<head>
+<script>
+    "use strict";
+
+    var myArray = [];
+
+    function $(id){
+        return document.getElementById(id);
+    }
+    window.onload=function(){
+        $("submitButton").onclick=SubmitButton;
+        $("searchButton").onclick=SearchButton;
+        $("sort").onclick=SortButton;
+        $("reverse").onclick=ReverseButton;
+        
+        $("dataEntered").focus();
+
+        TextFieldEnterTriggersButton("dataEntered","submitButton");
+        TextFieldEnterTriggersButton("search","searchButton");
+
+        function TextFieldEnterTriggersButton(field,button){
+            $(field).addEventListener("keyup",function(event){
+                if(event.keyCode!=13)return;
+                if(document.activeElement!=this)return;
+                event.preventDefault();
+                $(button).click();
+            });
+        }
+    }
+    function SubmitButton(){
+        var dataEntered = $("dataEntered").value;
+        if(dataEntered==""){
+            alert("The submission string cannot be blank.");
+            return;
+        }
+        myArray.push(dataEntered);
+        $("dataEntered").value="";
+        $("results").innerText=GetArrayOutput();
+    }
+    function SearchButton(){
+        var searchTerm = $("search").value.toUpperCase();
+        if(searchTerm==""){
+            alert("The search term cannot be blank.");
+            return;
+        }
+        var foundIndex = myArray.findIndex(function(value){
+            return value.toUpperCase().indexOf(searchTerm)!=-1;
+        });
+        if(foundIndex==-1){
+            $("results").innerText="The search term was not found.";
+        }else{
+            $("results").innerText="Found: "
+                +"myArray["+foundIndex+"]= "+myArray[foundIndex]+"\n\n"
+                +GetArrayOutput();
+        }
+    }
+    function SortButton(){
+        myArray.sort();
+        $("results").innerText=GetArrayOutput();
+    }
+    function ReverseButton(){
+        myArray.reverse();
+        $("results").innerText=GetArrayOutput();
+    }
+    function GetArrayOutput(){
+        var result = "";
+        for(var i=0;i<myArray.length;i++){
+            result+="    myArray["+i+"]= "+myArray[i]+"\n";
+        }
+        return result;
+    }
+</script>
+</head>
+<body>
+    <h2>Kevin Karosy - IT 2320 - Lab 11</h2>
+    Enter a string: <input type="text" id="dataEntered">
+    <button type="button" id="submitButton">Submit</button>
+    <br /><br />
+    Search for this: <input type="text" id="search">
+    <button type="button" id="searchButton">Search</button>
+    <br /><br />
+    <button type="button" id="sort">Sort the Array</button>
+    <button type="button" id="reverse">Reverse the Array</button> 
+    <br /><br />
+    <strong>My Array Output</strong><br/>
+    <span id="results"> *** </span>
+</body>
+</html>
