@@ -1,0 +1,137 @@
+<html>
+<head>
+<script>
+    "use strict";
+
+    function $(id){
+        return document.getElementById(id);
+    }
+    window.onload=function(){
+        $("gcdButton").onclick=GcdButton;
+        $("primeButton").onclick=PrimeButton;
+
+        TextFieldEnterTriggersButton("gcdNumberOne","gcdButton");
+        TextFieldEnterTriggersButton("gcdNumberTwo","gcdButton");
+        TextFieldEnterTriggersButton("primeNumber","primeButton");
+
+        function TextFieldEnterTriggersButton(field,button){
+            $(field).addEventListener("keyup",function(event){
+                if(event.keyCode!=13)return;
+                if(document.activeElement!=this)return;
+                event.preventDefault();
+                $(button).click();
+            });
+        }
+    };
+    function GcdButton(){
+        var numberOne=parseInt($("gcdNumberOne").value.trim());
+        var numberTwo=parseInt($("gcdNumberTwo").value.trim());
+
+        // basic data validation
+        if(isNaN(numberOne)||numberOne<0){
+            alert("Number one must be a positive integer.");return;
+        }$("gcdNumberOne").value=numberOne;
+        if(isNaN(numberTwo)||numberTwo<0){
+            alert("Number two must be a positive integer.");return;
+        }$("gcdNumberTwo").value=numberTwo;
+
+        // show results
+        $("gcdResults").innerText=FindGcd(numberOne,numberTwo);
+
+        function FindGcd(aaa,bbb){
+            var ccc;
+
+            // if bbb is bigger, switch them.
+            if(bbb>aaa){
+                ccc=aaa;
+                aaa=bbb;
+                bbb=ccc;
+            }
+
+            // euclid algorithm preparation
+            ccc=bbb;
+            bbb=aaa;
+
+            // euclid algorithm
+            while(ccc!=0){
+                aaa=bbb;
+                bbb=ccc;
+                ccc=aaa%bbb;
+            }
+            return bbb;
+        }
+    }
+    function PrimeButton(){
+        var number=parseInt($("primeNumber").value.trim());
+
+        // basic data validation
+        if(isNaN(number)||number<0){
+            alert("Number one must be a positive integer.");return;
+        }$("primeNumber").value=number;
+
+        // show results
+        $("primeResults").innerText=GetPrimeResults(number);
+
+        function GetPrimeResults(num){
+            if(num==0)return "none";
+            if(num==1)return "1. 1";
+            
+            var result="1. 1\n2. 2";
+            var count=2;
+            var isPrime;
+            var square;
+            for(var i=3;i<=num;i+=2){
+                isPrime=true;
+                square=Math.ceil(Math.sqrt(i));
+                for(var j=3;j<=square;j++){
+                    if(i%j==0){
+                        isPrime=false;
+                        break;
+                    }
+                }
+                if(isPrime){
+                    count++;
+                    result+="\n"+count+". "+i;
+                }
+            }
+            return result;
+        }
+    }
+</script>
+<style>
+    fieldset{
+        width:25em;
+        text-align:left;
+    }
+    .results{
+        background-color:lightgray;
+    }
+</style>
+</head>
+<body>
+    <center>
+    <h2>Kevin Karosy - IT 2320 - Lab 12</h2>
+
+    <fieldset>
+        <legend>GCD (Greatest Common Denominator)</legend>
+        Number one: <input type="text" id="gcdNumberOne" placeholder="positive integer" pattern="/^\d+$/">
+        <br>
+        Number two: <input type="text" id="gcdNumberTwo" placeholder="positive integer">
+        <br>
+        <button type="button" id="gcdButton">Calculate</button>
+        <br><br>
+        Results: <br><div class="results" id="gcdResults">****</div>
+    </fieldset>
+    <br>
+    <fieldset>
+        <legend>Prime Numbers</legend>
+        Enter a number: <input type="text" id="primeNumber" placeholder="positive integer">
+        <br>
+        <button type="button" id="primeButton">Calculate</button>
+        <br><br>
+        Results: <br><div class="results" id="primeResults">****</div>
+    </fieldset>
+
+    </center>
+</body>
+</html>
